@@ -68,6 +68,9 @@ const typeDefs = gql`
     """
     deleteTweet(id: ID!): Boolean!
     updateTweet(id: ID!, text: String!): Boolean!
+    postUser(id: ID!, username: String!, firstname: String!, lastname: String!): Boolean!
+    deleteUser(id: ID!): Boolean!
+    updateUser(username: String!, firstname: String!, lastname: String!): Boolean!
   }
 `;
 
@@ -103,6 +106,27 @@ const resolvers = {
       if (!tmp) return false;
       tmp.text = text;
       console.log(tweets.findIndex((tweet) => tweet.id === id));
+      return true;
+    },
+    postUser(_, { id, username, firstname, lastname }) {
+      const tmp = { id: id, username: username, firstname: firstname, lastname: lastname };
+      users.push(tmp);
+      return true;
+    },
+    deleteUser(_, { id }) {
+      const tmp = users.find((user) => user.id === id);
+      if (!tmp) return false;
+      users.filter((user) => user.id !== id);
+      return true;
+    },
+    updateUser(_, { username, firstname, lastname }) {
+      const newUser = {
+        id: users.length + 1,
+        username: username,
+        firstname: firstname,
+        lastname: lastname,
+      };
+      users.push(newUser);
       return true;
     },
   },
