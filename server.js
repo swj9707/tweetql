@@ -16,15 +16,15 @@ let tweets = [
 let users = [
   {
     id: "1",
-    username: "test",
-    firstname: "test",
-    lastname: "wassup",
+    username: "first",
+    firstname: "Wassup",
+    lastname: "Man1",
   },
   {
     id: "2",
-    username: "test2",
-    firstname: "test2",
-    lastname: "test2",
+    username: "second",
+    firstname: "Wassup",
+    lastname: "Man2",
   },
 ];
 
@@ -48,16 +48,26 @@ const typeDefs = gql`
     author: User
   }
   type Query {
+    """
+    Selects All User Informations.
+    """
     allUsers: [User!]!
+    """
+    Selects All Tweet Informations.
+    """
     allTweets: [Tweet!]!
     tweet(id: ID!): Tweet
   }
   type Mutation {
+    """
+    Inserts a Tweet
+    """
     postTweet(text: String!, userId: ID!): Tweet!
     """
     Deletes a Tweet if found, else returns false
     """
     deleteTweet(id: ID!): Boolean!
+    updateTweet(id: ID!, text: String!): Boolean!
   }
 `;
 
@@ -86,6 +96,13 @@ const resolvers = {
       const tweet = tweets.find((tweet) => tweet.id === id);
       if (!tweet) return false;
       tweets.filter((tweet) => tweet.id !== id);
+      return true;
+    },
+    updateTweet(_, { id, text }) {
+      const tmp = tweets.find((tweet) => tweet.id === id);
+      if (!tmp) return false;
+      tmp.text = text;
+      console.log(tweets.findIndex((tweet) => tweet.id === id));
       return true;
     },
   },
